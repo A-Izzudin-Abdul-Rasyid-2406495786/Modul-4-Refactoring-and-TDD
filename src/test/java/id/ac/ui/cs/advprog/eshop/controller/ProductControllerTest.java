@@ -70,7 +70,7 @@ class ProductControllerTest {
         when(productService.findAll()).thenReturn(Arrays.asList(product));
         mockMvc.perform(get("/product/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("ProductList"))
+                .andExpect(view().name("productList"))
                 .andExpect(model().attributeExists("products"));
     }
 
@@ -79,7 +79,7 @@ class ProductControllerTest {
         when(productService.findById(product.getProductId())).thenReturn(product);
         mockMvc.perform(get("/product/edit/" + product.getProductId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("EditProduct"))
+                .andExpect(view().name("editProduct"))
                 .andExpect(model().attributeExists(PRODUCT_ATTR));
     }
 
@@ -89,14 +89,14 @@ class ProductControllerTest {
                         .flashAttr(PRODUCT_ATTR, product))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(LIST));
-        verify(productService, times(1)).update(product.getProductId(), any(Product.class));
+        verify(productService, times(1)).update(eq(product.getProductId()), any(Product.class));
     }
 
     @Test
     void testDeleteProduct() throws Exception {
         mockMvc.perform(get("/product/delete/" + product.getProductId()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/product/list"));
+                .andExpect(redirectedUrl(LIST));
         verify(productService, times(1)).delete(product.getProductId());
     }
 
