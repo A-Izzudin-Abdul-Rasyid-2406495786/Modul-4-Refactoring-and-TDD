@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - module-2-exercise
+      - order
 
 jobs:
   pmd:
