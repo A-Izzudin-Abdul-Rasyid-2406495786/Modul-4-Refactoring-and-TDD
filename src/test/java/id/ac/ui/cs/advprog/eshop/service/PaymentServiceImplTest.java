@@ -29,6 +29,7 @@ class PaymentServiceImplTest {
 
     Order order;
     Payment payment;
+    private static final String SUCCESS = "SUCCESS";
 
     @BeforeEach
     void setUp() {
@@ -61,9 +62,9 @@ class PaymentServiceImplTest {
         doReturn(payment).when(paymentRepository).findById(payment.getId());
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
 
-        Payment result = paymentService.setStatus(payment, "SUCCESS");
-        assertEquals("SUCCESS", result.getStatus());
-        assertEquals("SUCCESS", result.getOrder().getStatus());
+        Payment result = paymentService.setStatus(payment, SUCCESS);
+        assertEquals(SUCCESS, result.getStatus());
+        assertEquals(SUCCESS, result.getOrder().getStatus());
     }
 
     @Test
@@ -82,7 +83,7 @@ class PaymentServiceImplTest {
 
         Payment invalidPayment = new Payment("invalid-id", "BANK_TRANSFER", payment.getPaymentData(), order);
 
-        assertThrows(IllegalArgumentException.class, () -> paymentService.setStatus(invalidPayment, "SUCCESS"));
+        assertThrows(IllegalArgumentException.class, () -> paymentService.setStatus(invalidPayment, SUCCESS));
     }
 
     @Test

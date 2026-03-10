@@ -29,9 +29,10 @@ public class OrderServiceTest {
 
     List<Order> orders;
 
+    private static final String ZCZC = "zczc";
+
     @BeforeEach
     void setUp() {
-
         List<Product> products = new ArrayList<>();
         Product product1 = new Product();
         product1.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
@@ -43,12 +44,10 @@ public class OrderServiceTest {
 
         Order order1 = new Order("13652556-012a-4c07-b546-54eb1396d79b",
                 products, 1708560000L, "Safira Sudrajat");
-
         orders.add(order1);
 
         Order order2 = new Order("7f9el5bb-4b15-42f4-aebc-c3af385fb078",
                 products, 1708570000L, "Safira Sudrajat");
-
         orders.add(order2);
     }
 
@@ -93,17 +92,15 @@ public class OrderServiceTest {
 
         assertThrows(IllegalArgumentException.class,
                 () -> orderService.updateStatus(order.getId(), "MEOW"));
-
         verify(orderRepository, times(0)).save(any(Order.class));
     }
 
     @Test
     void testUpdateStatusInvalidOrderId() {
-        doReturn(null).when(orderRepository).findById("zczc");
+        doReturn(null).when(orderRepository).findById(ZCZC);
 
         assertThrows(NoSuchElementException.class,
-                () -> orderService.updateStatus("zczc", OrderStatus.SUCCESS.getValue()));
-
+                () -> orderService.updateStatus(ZCZC, OrderStatus.SUCCESS.getValue()));
         verify(orderRepository, times(0)).save(any(Order.class));
     }
 
@@ -118,8 +115,8 @@ public class OrderServiceTest {
 
     @Test
     void testFindByIdIfNotFound() {
-        doReturn(null).when(orderRepository).findById("zczc");
-        assertNull(orderService.findById("zczc"));
+        doReturn(null).when(orderRepository).findById(ZCZC);
+        assertNull(orderService.findById(ZCZC));
     }
 
     @Test
@@ -138,10 +135,10 @@ public class OrderServiceTest {
     void testFindAllByAuthorIfAllLowercase() {
         Order order = orders.get(1);
         doReturn(new ArrayList<Order>()).when(orderRepository)
-                .findAllByAuthor(order.getAuthor().toLowerCase());
+                .findAllByAuthor(order.getAuthor().toLowerCase(java.util.Locale.ROOT));
 
         List<Order> results = orderService.findAllByAuthor(
-                order.getAuthor().toLowerCase());
+                order.getAuthor().toLowerCase(java.util.Locale.ROOT));
         assertTrue(results.isEmpty());
     }
 }

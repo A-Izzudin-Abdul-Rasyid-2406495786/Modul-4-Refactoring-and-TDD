@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
+import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
 import id.ac.ui.cs.advprog.eshop.model.*;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
@@ -30,15 +31,15 @@ public class PaymentServiceImpl implements PaymentService {
         if (result != null) {
             result.setStatus(status);
 
-            if ("SUCCESS".equals(status)) {
-                result.getOrder().setStatus("SUCCESS");
-            } else if ("REJECTED".equals(status)) {
-                result.getOrder().setStatus("FAILED");
+            if (Payment.STATUS_SUCCESS.equals(status)) {
+                result.getOrder().setStatus(OrderStatus.SUCCESS.getValue());
+            } else if (Payment.STATUS_REJECTED.equals(status)) {
+                result.getOrder().setStatus(OrderStatus.FAILED.getValue());
             }
 
             return paymentRepository.save(result);
         }
-        throw new IllegalArgumentException("Payment not found"); // Menggunakan bahasa Inggris agar tidak dianggap typo
+        throw new IllegalArgumentException("Payment not found");
     }
 
     @Override

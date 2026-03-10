@@ -35,9 +35,10 @@ class PaymentControllerTest {
 
     private Order dummyOrder;
 
+    private static final String PAY_ID = "pay-1";
+
     @BeforeEach
     void setUp() {
-        // Harus ada produknya agar new Order() tidak error IllegalArgumentException
         List<Product> products = new ArrayList<>();
         Product p = new Product();
         p.setProductId("1");
@@ -56,10 +57,10 @@ class PaymentControllerTest {
 
     @Test
     void testPaymentDetail() throws Exception {
-        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
-        when(paymentService.getPayment("pay-1")).thenReturn(payment);
+        Payment payment = new Payment(PAY_ID, "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
+        when(paymentService.getPayment(PAY_ID)).thenReturn(payment);
 
-        mockMvc.perform(get("/payment/detail/pay-1"))
+        mockMvc.perform(get("/payment/detail/" + PAY_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("PaymentDetail"))
                 .andExpect(model().attributeExists("payment"));
@@ -76,10 +77,10 @@ class PaymentControllerTest {
 
     @Test
     void testPaymentAdminDetail() throws Exception {
-        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
-        when(paymentService.getPayment("pay-1")).thenReturn(payment);
+        Payment payment = new Payment(PAY_ID, "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
+        when(paymentService.getPayment(PAY_ID)).thenReturn(payment);
 
-        mockMvc.perform(get("/payment/admin/detail/pay-1"))
+        mockMvc.perform(get("/payment/admin/detail/" + PAY_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("PaymentAdminDetail"))
                 .andExpect(model().attributeExists("payment"));
@@ -87,10 +88,10 @@ class PaymentControllerTest {
 
     @Test
     void testPaymentAdminSetStatus() throws Exception {
-        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
-        when(paymentService.getPayment("pay-1")).thenReturn(payment);
+        Payment payment = new Payment(PAY_ID, "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
+        when(paymentService.getPayment(PAY_ID)).thenReturn(payment);
 
-        mockMvc.perform(post("/payment/admin/set-status/pay-1")
+        mockMvc.perform(post("/payment/admin/set-status/" + PAY_ID)
                         .param("status", "SUCCESS"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/payment/admin/list"));

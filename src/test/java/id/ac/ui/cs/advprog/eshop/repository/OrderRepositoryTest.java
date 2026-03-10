@@ -115,9 +115,7 @@ class OrderRepositoryTest {
         orderRepository.save(orders.get(1));
 
         List<Order> orderList = orderRepository.findAllByAuthor(
-                orders.get(1).getAuthor().toLowerCase());
+                orders.get(1).getAuthor().toLowerCase(java.util.Locale.ROOT));
         assertTrue(orderList.isEmpty());
     }
-
-
 }
