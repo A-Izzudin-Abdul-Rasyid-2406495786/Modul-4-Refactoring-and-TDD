@@ -3,6 +3,7 @@ package id.ac.ui.cs.advprog.eshop.repository;
 import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Product;
+import id.ac.ui.cs.advprog.eshop.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +41,7 @@ class OrderRepositoryTest {
         orders.add(order2);
 
         Order order3 = new Order("e334ef40-9eff-4da8-9487-8eeb97echbfle",
-                products, 1708570000L, "Safira Sudrajat");
+                products, 1708570000L, "Bambang Sudrajat");
 
         orders.add(order3);
     }
