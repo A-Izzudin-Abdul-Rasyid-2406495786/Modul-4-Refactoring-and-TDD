@@ -1,8 +1,10 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Order;
+import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.OrderService;
+import id.ac.ui.cs.advprog.eshop.service.PaymentService;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,9 +24,27 @@ public class OrderController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     @GetMapping("/create")
     public String createOrderPage() {
         return "CreateOrder";
+    }
+
+    @PostMapping("/pay/{orderId}")
+    public String payOrderPost(@PathVariable String orderId, @RequestParam String method, @RequestParam java.util.Map<String, String> allParams, Model model) {
+        Order order = orderService.findById(orderId);
+        Payment payment = paymentService.addPayment(order, method, allParams);
+        model.addAttribute("paymentId", payment.getId());
+        return "OrderPaySuccess";
+    }
+
+    @GetMapping("/pay/{orderId}")
+    public String payOrderPage(@PathVariable String orderId, Model model) {
+        Order order = orderService.findById(orderId);
+        model.addAttribute("order", order);
+        return "OrderPay";
     }
 
     @PostMapping("/create")
