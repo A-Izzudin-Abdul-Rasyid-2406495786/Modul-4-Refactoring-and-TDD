@@ -2,8 +2,10 @@ package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.OrderService;
 import id.ac.ui.cs.advprog.eshop.service.PaymentService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -12,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,6 +33,20 @@ class PaymentControllerTest {
     @MockitoBean
     private OrderService orderService;
 
+    private Order dummyOrder;
+
+    @BeforeEach
+    void setUp() {
+        // Harus ada produknya agar new Order() tidak error IllegalArgumentException
+        List<Product> products = new ArrayList<>();
+        Product p = new Product();
+        p.setProductId("1");
+        p.setProductName("Sabun");
+        p.setProductQuantity(2);
+        products.add(p);
+        dummyOrder = new Order("ord-1", products, 1L, "Haikal");
+    }
+
     @Test
     void testPaymentDetailForm() throws Exception {
         mockMvc.perform(get("/payment/detail"))
@@ -39,7 +56,7 @@ class PaymentControllerTest {
 
     @Test
     void testPaymentDetail() throws Exception {
-        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, new Order("ord-1", new ArrayList<>(), 1L, "Haikal"));
+        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
         when(paymentService.getPayment("pay-1")).thenReturn(payment);
 
         mockMvc.perform(get("/payment/detail/pay-1"))
@@ -59,7 +76,7 @@ class PaymentControllerTest {
 
     @Test
     void testPaymentAdminDetail() throws Exception {
-        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, new Order("ord-1", new ArrayList<>(), 1L, "Haikal"));
+        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
         when(paymentService.getPayment("pay-1")).thenReturn(payment);
 
         mockMvc.perform(get("/payment/admin/detail/pay-1"))
@@ -70,7 +87,7 @@ class PaymentControllerTest {
 
     @Test
     void testPaymentAdminSetStatus() throws Exception {
-        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, new Order("ord-1", new ArrayList<>(), 1L, "Haikal"));
+        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
         when(paymentService.getPayment("pay-1")).thenReturn(payment);
 
         mockMvc.perform(post("/payment/admin/set-status/pay-1")

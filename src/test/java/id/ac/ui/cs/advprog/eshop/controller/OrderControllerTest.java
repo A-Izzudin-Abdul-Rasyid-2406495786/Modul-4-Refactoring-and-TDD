@@ -1,9 +1,12 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Order;
+import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.OrderService;
+import id.ac.ui.cs.advprog.eshop.service.PaymentService;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,6 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -29,6 +33,24 @@ class OrderControllerTest {
 
     @MockitoBean
     private ProductService productService;
+
+    // TAMBAHAN: Kita harus mock PaymentService karena OrderController sekarang memakainya
+    @MockitoBean
+    private PaymentService paymentService;
+
+    private Order dummyOrder;
+
+    @BeforeEach
+    void setUp() {
+        // Membuat order yang valid (ada isinya) agar tidak melempar IllegalArgumentException
+        List<Product> products = new ArrayList<>();
+        Product p = new Product();
+        p.setProductId("1");
+        p.setProductName("Sabun");
+        p.setProductQuantity(2);
+        products.add(p);
+        dummyOrder = new Order("ord-1", products, 1L, "Haikal");
+    }
 
     @Test
     void testCreateOrderPage() throws Exception {
@@ -77,8 +99,7 @@ class OrderControllerTest {
 
     @Test
     void testOrderPayPage() throws Exception {
-        Order order = new Order("ord-1", new ArrayList<>(), 1L, "Haikal");
-        when(orderService.findById("ord-1")).thenReturn(order);
+        when(orderService.findById("ord-1")).thenReturn(dummyOrder);
 
         mockMvc.perform(get("/order/pay/ord-1"))
                 .andExpect(status().isOk())
@@ -88,8 +109,11 @@ class OrderControllerTest {
 
     @Test
     void testOrderPayPost() throws Exception {
-        Order order = new Order("ord-1", new ArrayList<>(), 1L, "Haikal");
-        when(orderService.findById("ord-1")).thenReturn(order);
+        when(orderService.findById("ord-1")).thenReturn(dummyOrder);
+
+        // Harus mock pembuatan payment agar tidak NullPointerException
+        Payment payment = new Payment("pay-1", "BANK_TRANSFER", new HashMap<>(){{put("bankName","BCA"); put("referenceCode","123");}}, dummyOrder);
+        when(paymentService.addPayment(any(Order.class), anyString(), anyMap())).thenReturn(payment);
 
         mockMvc.perform(post("/order/pay/ord-1")
                         .param("method", "BANK_TRANSFER")
