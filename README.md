@@ -1,6 +1,6 @@
 ## 🚀 Deployment URL
 Akses website di sini: [advshop](https://natural-arabella-acid-workspace-1a11f830.koyeb.app/product/list)
-# Reflection 1 (CODING STANDARDS)
+# Reflection 1 Module 1 (CODING STANDARDS)
 - **Secure Coding**: 
 Aku melakukan pengecekan null untuk menghindari `NullPointerException` dan memastikan ID produk selalu valid sebelum melakukan operasi hapus atau edit.
 - **Clean Code:** 
@@ -17,7 +17,7 @@ Penamaan variabel dan metode yang jelas (`productData`, `delete`, `createProduct
   Mengubah redirect dari `"redirect:product/list"` menjadi `"redirect:/product/list"` dengan menambahkan garis miring di depannya.  
   Ternyata salah taruh "/" aja dapat menyebabkan masalah yang fatal.
   
-# Reflection 2 (CODING STANDARDS)
+# Reflection 2 Module 1 (CODING STANDARDS)
 ## Unit test
 - `How many unit tests should be made in a class?`
 Menurutku tidak ada angka pasti dalam unit test, tapi selama itu mencakup semua skenario. Skenario positif, skenario negatif, skenario null, dll. maka akan menghasilkan code coverage yang semakin tinggi dan membuat kode kita lebih "kokoh" dan tidak rentan terhadap bug. Meskipun tidak menjamin akan 100% bebas dari bug.
@@ -37,7 +37,7 @@ Pembuatan kelas baru dengan menyalin struktur yang sama akan membuat kode menjad
 
   Untuk memperbaikinya menurutku adalah prosedur setup dan variabel umum harus dikumpulkan ke dalam sebuah Base Class yang kemudian diwariskan ke setiap kelas tes spesifik. Ini akan membuat kode lebih bersih, mudah dibaca, dan lebih efisien untuk dikembangkan.
 
-# Reflection 3 (CI/CD & DevOps)
+# Reflection 3 module 2 (CI/CD & DevOps)
 
 ### 1. Code Quality Issues and Fix Strategy
 Selama pengerjaan tutorial dan latihan ini, saya menemukan dan memperbaiki beberapa masalah terkait kualitas kode dan infrastruktur:
@@ -62,7 +62,7 @@ Alasannya adalah:
 2.  **Continuous Deployment:** Implementasi ini telah terhubung langsung dengan platform PaaS (Koyeb). Setelah kode lolos semua tahapan pengujian dan analisis kualitas di branch yang ditentukan, aplikasi akan langsung diperbarui di server tanpa intervensi manual, sehingga perubahan dapat langsung dirasakan oleh pengguna.
 3.  **Automated Quality Gate:** Adanya integrasi alat analisis seperti PMD dan Scorecard memastikan bahwa setiap perubahan kode tidak hanya "berjalan", tetapi juga memenuhi standar keamanan dan kebersihan kode yang baik sebelum dianggap layak untuk dideploy.
 
-# Reflection 4 (SOLID PRINCIPLES)
+# Reflection 4 module 3 (SOLID PRINCIPLES)
 ### 1. Prinsip SOLID yang Diterapkan pada Proyek
 Berdasarkan perubahan dari kode sebelumnya ke kode yang baru, terdapat beberapa prinsip SOLID yang telah saya terapkan:
 * **Single Responsibility Principle (SRP):** Saya memisahkan kelas `CarController` yang sebelumnya menumpuk di dalam file `ProductController.java` menjadi file dan kelas terpisah (`CarController.java`). Kini masing-masing controller hanya memiliki satu tanggung jawab (mengurus Product atau mengurus Car).
@@ -79,3 +79,20 @@ Berdasarkan perubahan dari kode sebelumnya ke kode yang baru, terdapat beberapa 
 * **Coupling yang Tinggi (Tightly Coupled):** Saat `CarController` masih bergantung pada kelas konkret `CarServiceImpl`, kode menjadi kaku. Jika struktur konstruktor `CarServiceImpl` berubah, `CarController` mungkin juga harus ikut diubah. Ini membuat kode rentan patah (*fragile*).
 * **God Object / Spaghetti Code:** Menyimpan `CarController` di dalam file `ProductController.java` akan membuat file tersebut membengkak ukurannya sering bertambahnya fitur aplikasi. Ketika aplikasi sudah berskala besar, file tersebut akan memiliki ratusan atau ribuan baris kode yang sangat sulit untuk dibaca dan dikerjakan secara paralel dengan anggota tim lain akibat *merge conflict*.
 * **Pewarisan yang Membingungkan:** Memaksa `CarController extends ProductController` hanya agar bisa berbagi sedikit *behavior* akan mengacaukan struktur OOP. Hal ini bisa menyebabkan metode dari `ProductController` terpanggil di alur mobil yang berpotensi menghasilkan *bug* fatal pada data *production*.
+
+# Reflection 5 module 4 (Test-Driven Development)
+
+### 1. Refleksi Alur TDD (Percival, 2017)
+Alur kerja *Test-Driven Development* (TDD) dengan siklus RED - GREEN - REFACTOR terbukti **sangat bermanfaat** selama pengerjaan fitur ini. Pendekatan ini secara aktif memaksa perancangan spesifikasi, batasan, dan ekspektasi fitur (seperti pada modul `Payment`) dilakukan secara matang sebelum logika program itu sendiri ditulis. Rangkaian tes yang dibuat di awal berfungsi sebagai jaring pengaman (*safety net*) yang tangguh. Jaring pengaman ini memvalidasi bahwa modifikasi kode, termasuk penyesuaian kelas abstrak untuk prinsip SOLID pada fase REFACTOR, tidak akan merusak fungsionalitas yang sudah mapan. Alur kerja ini memberikan arah penyelesaian masalah yang jauh lebih terstruktur dan terukur.
+
+Untuk iterasi pengembangan selanjutnya, fokus perancangan tes perlu diperluas. Skenario *unhappy path* atau kasus-kasus ekstrem (seperti format data tidak wajar, nilai *null*, atau manipulasi *input*) harus dirumuskan lebih komprehensif sejak fase RED, sehingga rangkaian tes tidak hanya condong menguji skenario ideal (*happy path*).
+
+### 2. Refleksi Prinsip F.I.R.S.T pada Unit Test
+Rangkaian *unit test* yang dikembangkan dalam tutorial dan latihan ini **telah memenuhi kaidah prinsip F.I.R.S.T**:
+* **Fast:** Eksekusi pengujian berlangsung sangat cepat. Penggunaan *mocking* (seperti `MockitoBean`) dan manipulasi data di memori mencegah ketergantungan pada *database* fisik yang lambat atau latensi jaringan.
+* **Independent:** Setiap blok pengujian berjalan mandiri tanpa efek samping. Pemanfaatan anotasi `@BeforeEach` memastikan inisialisasi data (seperti pembuatan *dummy* `Order` dan `Product`) selalu diatur ulang dalam kondisi bersih dan terisolasi sebelum setiap tes dieksekusi.
+* **Repeatable:** Konsistensi hasil tes terjamin di berbagai lingkungan (baik saat dieksekusi di komputer lokal maupun di *runner* CI/CD GitHub Actions).
+* **Self-Validating:** Pengujian dapat menyimpulkan kelulusannya sendiri. Evaluasi status menggunakan fungsi bawaan seperti `assertEquals`, `assertNull`, atau `assertThrows` menghilangkan kebutuhan inspeksi *log* secara manual.
+* **Timely:** Implementasi tes dilakukan sangat tepat waktu karena mematuhi kaidah TDD, di mana skrip tes selalu ditulis mendahului penulisan kode sumber produksi.
+
+Langkah perbaikan ke depannya adalah menjaga tingkat isolasi (*independence*) yang sama ketatnya pada ranah *Functional Test* (Selenium). Jejak interaksi *browser* dan penambahan data dari satu sesi tes UI harus dipastikan bersih agar tidak mencemari lingkungan *Functional Test* berikutnya.
