@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><title>Review Payment</title><link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"></head>
+<body class="container mt-4">
+<h2>Review Payment</h2>
+<p>ID: <span th:text="${payment.id}"></span></p>
+<p>Method: <span th:text="${payment.method}"></span></p>
+<p>Status: <span th:text="${payment.status}"></span></p>
+<form th:action="@{'/payment/admin/set-status/' + ${payment.id}}" method="post">
+    <button type="submit" name="status" value="SUCCESS" class="btn btn-success">Accept</button>
+    <button type="submit" name="status" value="REJECTED" class="btn btn-danger">Reject</button>
+</form>
+<a th:href="@{/payment/admin/list}" class="btn btn-secondary mt-2">Back</a>
+</body>
+</html>

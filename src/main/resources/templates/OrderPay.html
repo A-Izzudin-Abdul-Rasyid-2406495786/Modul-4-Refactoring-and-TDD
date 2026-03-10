@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><title>Pay Order</title><link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"></head>
+<body class="container mt-4">
+<h2>Pay Order: <span th:text="${order.id}"></span></h2>
+<form th:action="@{'/order/pay/' + ${order.id}}" method="post">
+    <div class="form-group"><label>Method</label>
+        <select name="method" class="form-control col-4">
+            <option value="BANK_TRANSFER">Bank Transfer</option>
+            <option value="VOUCHER">Voucher Code</option>
+        </select>
+    </div>
+    <div class="form-group"><label>Bank Name (Bank Transfer)</label><input type="text" name="bankName" class="form-control col-4"></div>
+    <div class="form-group"><label>Ref Code (Bank Transfer)</label><input type="text" name="referenceCode" class="form-control col-4"></div>
+    <div class="form-group"><label>Voucher Code (Voucher)</label><input type="text" name="voucherCode" class="form-control col-4"></div>
+    <button type="submit" class="btn btn-primary">Submit Payment</button>
+</form>
+</body>
+</html>

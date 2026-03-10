@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><title>All Payments</title><link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"></head>
+<body class="container mt-4">
+<h2>All Payments (Admin)</h2>
+<table class="table table-striped">
+    <thead><tr><th>ID</th><th>Method</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+    <tr th:each="p: ${payments}">
+        <td th:text="${p.id}"></td><td th:text="${p.method}"></td><td th:text="${p.status}"></td>
+        <td><a th:href="@{'/payment/admin/detail/' + ${p.id}}" class="btn btn-info btn-sm">Review</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
