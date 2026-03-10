@@ -18,7 +18,7 @@ class OrderRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        orderRepository = new OrderRepotory();
+        orderRepository = new OrderRepository();
 
         List<Product> products = new ArrayList<>();
         Product product1 = new Product();
