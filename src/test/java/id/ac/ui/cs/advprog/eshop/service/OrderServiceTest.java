@@ -31,7 +31,6 @@ public class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        orderRepository = new OrderRepository();
 
         List<Product> products = new ArrayList<>();
         Product product1 = new Product();
@@ -51,11 +50,6 @@ public class OrderServiceTest {
                 products, 1708570000L, "Safira Sudrajat");
 
         orders.add(order2);
-
-        Order order3 = new Order("e334ef40-9eff-4da8-9487-8eeb97echbfle",
-                products, 1708570000L, "Bambang Sudrajat");
-
-        orders.add(order3);
     }
 
     @Test
