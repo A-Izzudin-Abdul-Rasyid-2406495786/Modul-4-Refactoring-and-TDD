@@ -74,4 +74,29 @@ class OrderControllerTest {
                 .andExpect(view().name("OrderList"))
                 .andExpect(model().attributeExists("orders"));
     }
+
+    @Test
+    void testOrderPayPage() throws Exception {
+        Order order = new Order("ord-1", new ArrayList<>(), 1L, "Haikal");
+        when(orderService.findById("ord-1")).thenReturn(order);
+
+        mockMvc.perform(get("/order/pay/ord-1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("OrderPay"))
+                .andExpect(model().attributeExists("order"));
+    }
+
+    @Test
+    void testOrderPayPost() throws Exception {
+        Order order = new Order("ord-1", new ArrayList<>(), 1L, "Haikal");
+        when(orderService.findById("ord-1")).thenReturn(order);
+
+        mockMvc.perform(post("/order/pay/ord-1")
+                        .param("method", "BANK_TRANSFER")
+                        .param("bankName", "BCA")
+                        .param("referenceCode", "REF123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("OrderPaySuccess"))
+                .andExpect(model().attributeExists("paymentId"));
+    }
 }
